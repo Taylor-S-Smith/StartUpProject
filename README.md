@@ -19,6 +19,15 @@ Reading Page
 Story Addition Page
 ![Story Page](StoryAdditionPage.PNG)
 
+Story View Admin Page
+![Story View](StoryView.PNG)
+
+Pending Approval Admin Page
+![Pending Approval](PendingApproval.PNG)
+
+User View Admin Page
+![User View](UserView.PNG)
+
 ### Key features
 
 - Ability to securely login
