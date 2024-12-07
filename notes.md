@@ -173,3 +173,59 @@ submitDataEl.addEventListener('click', function (event) {
 });
 ```
 
+## Create a new subdomain
+
+Step 1: Access AWS server with `ssh -i "/c/Users/home/Documents/CS 260/StoryWeaveProduction.pem" ubuntu@44.219.4.176`
+
+Step 2: Update Caddyfile with your new domain. It should look like this:
+```
+new-subdomain.storyweave.click {
+   reverse_proxy * localhost:5000
+   header Cache-Control no-store
+   header -etag
+   header -server
+   header Access-Control-Allow-Origin *
+}
+```
+NOTE: Because each points to a unique service, each will need a unique port number in the Caddyfile. The above port is 5000. Remember your chosen port for future steps.
+
+End with restarting caddy using `sudo service caddy restart`
+
+Step 3: Create a new service. This can be accomplished by:
+- Navigating to the newly created "new-subdomain" file in ther /services folder
+- Creating a new node server using `npm install express`
+- Create an index.js file. Use the following template, but replace the value 5000 with your chosen port number from Step 2.
+
+```
+const express = require('express');
+const app = express();
+
+// The service port defaults to 5001 or is read from the program arguments
+const port = process.argv.length > 2 ? process.argv[2] : 5000;
+
+// Text to display for the service name
+const serviceName = process.argv.length > 3 ? process.argv[3] : 'html';
+
+// Serve up the static content
+app.use(express.static('public'));
+
+// Provide the version of the application
+app.get('/config', (_req, res) => {
+  res.send({ version: '1.0.0', name: serviceName });
+});
+
+// Return the homepage if the path is unknown
+app.use((_req, res) => {
+  res.sendFile('index.html', { root: 'public' });
+});
+
+app.listen(port, () => {
+  console.log(`Listening on port ${port}`);
+});
+```
+
+Step 4: Start the node service by using `pm2 start index.js --name new-subdomain -- 5000 new-subdomain` replacing the name 'new-subdomain' and the number '5000' with you r subdomain name and port number.
+
+You can verify that it is running properly by using pm2 status. Remember you can always remove your running services by using `pm2 stop process-name` and optionally `pm2 delete process-name`.
+
+NOTE: Processes you manually start will not service if you restart the aws server. Until you learn more about service management (ChatGPT reccommended Systemd) you will need to manually start up each subdomain that is not simon or startup.

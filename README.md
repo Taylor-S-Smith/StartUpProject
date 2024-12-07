@@ -11,22 +11,22 @@ The RPG Collaborative Text Application is a cooperative writing experience that 
 ### Design
 
 Login Page
-![Login Page](LoginPage.PNG)
+![Login Page](/Page%20Mock-Ups/LoginPage.PNG)
 
 Reading Page
-![Reading Page](ReadingPage.PNG)
+![Reading Page](/Page%20Mock-Ups/ReadingPage.PNG)
 
 Story Addition Page
-![Story Page](StoryAdditionPage.PNG)
+![Story Page](/Page%20Mock-Ups/StoryAdditionPage.PNG)
 
 Story View Admin Page
-![Story View](StoryView.PNG)
+![Story View](/Page%20Mock-Ups/StoryView.PNG)
 
 Pending Approval Admin Page
-![Pending Approval](PendingApproval.PNG)
+![Pending Approval](/Page%20Mock-Ups/PendingApproval.PNG)
 
 User View Admin Page
-![User View](UserView.PNG)
+![User View](/Page%20Mock-Ups/UserView.PNG)
 
 ### Key features
 
