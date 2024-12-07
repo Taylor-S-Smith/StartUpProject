@@ -54,3 +54,14 @@ Here are the technologies I will use with an explanation of how I will use them:
 - **DB** - Stores users, story text, and choice connections in the database.
 - **Login** - Register and login users. Credentials securely stored in database. Can't contribute to the story unless authenticated.
 - **WebSocket** - The story, approval page, and story view will update in real time as portions are written and approved. People playing through the story will see it update in real time.
+
+## HTML deliverable
+
+All pages where given their HTML structure.
+
+- [x] **HTML pages** - Six HTML page that represent the user and admin pages to read, create, and manage the evolving story
+- [x] **Links** - All pages link to all others. Later we will make sure that only adimns can access the admin pages
+- [x] **Text** -Text is used on all pages. One example is on in story.html where the text of the ongoing story is stored.
+- [x] **Images** - On index.html I included an AI generated image to help set the tone of the website.
+- [x] **DB/Login** - Included placeholders for login and submission. The story.html page will be populated by the database as will the users.html and weave.html admin pages.
+- [x] **WebSocket** -  A realtime count of the total page and choice count will be displayed on weave.html.
