@@ -65,3 +65,16 @@ All pages where given their HTML structure.
 - [x] **Images** - On index.html I included an AI generated image to help set the tone of the website.
 - [x] **DB/Login** - Included placeholders for login and submission. The story.html page will be populated by the database as will the users.html and weave.html admin pages.
 - [x] **WebSocket** -  A realtime count of the total page and choice count will be displayed on weave.html.
+
+## CSS deliverable
+
+All pages were given CSS styling
+
+- [x] **Header, footer, and main content body**
+- [x] **Navigation elements** - Made the header organized and stand out
+- [x] **Responsive to window resizing** - Made sure all elements, including images and navbar resize depending on screen size
+- [x] **Application elements** - Used appealing elements
+- [x] **Application text content** - Consistent fonts
+- [x] **Application images** - Made images properly resize
+
+Note: on the weave.html page (accessed by clicking "View ALl Sotry Segments") I still have my placeholder for the dependency graph. This is because I will be using a javascript library to display it, so I will wait until the Javascript section to implement it.
