@@ -42,41 +42,37 @@
       </nav>     
     </header>
 
-    <main class="row justify-content-center">
-        <div>
-            <h1>Story View</h1>
-            <div>
-                Insert crazy javascript magic here
+    <main class="row text-center justify-content-center my-3">
+        <div class="col-11">
+          <h1>Story View</h1>
+
+          <div class="my-3" id="weaveDependencyGraph">
+            <div class="mb-3">
+              <b>In order to properly style this we will need a javascript library</b>
             </div>
-            <br/>
-            <div>
-                Chapter 1
+            <div style="border: 2px; border-style: solid;">
+              <div>
+                Chapter 1 -> Chapter 2 -> Chapter 6
+              </div>
+              <div>
+                |-> Chapter 3 -> Chapter 4
+              </div>
+              <div>
+                  |-Chapter 5
+              </div>
             </div>
-            <div>
-                |-Chapter 2
+            
+          </div>
+
+          <!--Database Information-->
+          <div>
+            <div id="pageCount">
+              Total Pages So Far: Error
             </div>
-            <div>
-                |-Chapter 3
-            </div>
-            <div>
-                -|-Chapter 4
-            </div>
-            <div>
-                -|-Chapter 5
-            </div>
-            <div>
-                -|-Chapter 6
-            </div>
-        </div>
-        <!--Database Information-->
-        <br/>
-        <br/>
-        <div class="row" id="pageCount">
-            Total Pages So Far: <div >Error</div>
-        </div>
-        <br/>
-        <div id="choiceCount">
-            Total Choices So Far: <div >Error</div>
+            <div id="choiceCount">
+              Total Choices So Far: Error
+            </div>  
+          </div>      
         </div>
     </main>
 
