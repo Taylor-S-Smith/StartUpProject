@@ -90,25 +90,28 @@ apiRouter.get('/joke', async (req, res) => {
 //I am not sure how similar we were allowed to make it, since we were given the code. If is too similar I would be happy to remove it.
 
 apiRouter.post('/auth/signup', async (req, res) => {
-  const user = USER_GET_RID_OF_ME[req.body.username];
+  const user = DB.getUser(req.body.username);
   if(user) {
     res.status(409).send({msg: 'A user already exists with that username'})
     return;
   } else {
-    const user = {username: req.body.username, password: req.body.password, dateJoined: req.body.dateJoined, token: uuIdv4()}
-    USER_GET_RID_OF_ME[user.username] = user;
-    res.send({ token: user.token })
+    const newUser = DB.createUser(req.body.username, req.body.password, req.body.dateJoined);
+    res.send({ token: newUser.token })
     return;
   }
 })
 
 apiRouter.post('/auth/login', async (req, res) => {
-  const possibleUser = USER_GET_RID_OF_ME[req.body.username];
-  if(possibleUser && possibleUser.password === req.body.password) {
-    possibleUser.token = uuIdv4();
-    res.send({ token: possibleUser.token })
-    return;
+  const user = DB.getUser(req.body.username);
+  if(user) {
+    if(await bcrypt.compare(req.body.password, user.password)) {
+
+      possibleUser.token = uuIdv4();
+      res.send({ token: possibleUser.token })
+      return;
+    }
   }
+  
 
   res.status(401).send({ msg: 'No user exists with that combination of username and password' });
 })

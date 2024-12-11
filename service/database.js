@@ -27,12 +27,13 @@ function getAllUsers() {
   return cursor.toArray();
 }
 
-async function createUser(username, password) {
+async function createUser(username, password, dateJoined) {
   const passwordHash = await bcrypt.hash(password, 10);
 
   const user = {
     username: username,
     password: passwordHash,
+    dateJoined: dateJoined,
     token: uuid.v4(),
   };
 
