@@ -10,29 +10,35 @@ export function Login() {
 
     const navigate = useNavigate();
 
-    const handleNavigation = () => {
-        navigate('/story');
-    }
-
     async function logIn() {
-        loginOrSignUp('/auth/signup');
+        loginOrSignUp('api/auth/login');
     }
 
     async function signUp() {
-        loginOrSignUp('/auth/login');
+        loginOrSignUp('api/auth/signup');
     }
 
     async function loginOrSignUp(endpoint) {
+
         const response = await fetch(endpoint, {
             method: 'post',
-            body: JSON.stringify({ userName: userName, password: password}),
+            body: JSON.stringify({ username: userName, password: password, dateJoined: Date.UTC()}),
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
             },
         });
+        if(response?.status === 200) {
+            localStorage.setItem('userName', userName);
+            navigate('/story');
+        } else {
+            const error = await response.json();
+            setErrorMsg(`Error: ${error.msg}`);
+        }
+        
 
         if(response?.status === 200) {
-            localStorage.setItem('userName', userName)
+            localStorage.setItem('userName', userName);
+            navigate('/story');
         } else {
             const error = await response.json();
             setErrorMsg(`Error: ${body.msg}`);
@@ -56,17 +62,21 @@ export function Login() {
                     <div className="row justify-content-center">
                         <div className="pt-3">
                             <label htmlFor="username">Username</label>
-                            <input type="text"  className="form-control" id="username" value={username} onChange={} placeholder="Type your Username"/>
+                            <input type="text"  className="form-control" id="username" value={userName} onChange={(e) => setUserName(e.target.value)} placeholder="Type your Username"/>
                         </div>
                         <div className="py-3">
                             <label htmlFor="password">Password</label>
-                            <input type="password" className="form-control" id="password" placeholder="********"/>
+                            <input type="password" className="form-control" id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="********"/>
                         </div>
-                        <button onClick={handleNavigation} className="btn btn-lg btn-primary btn-block">Log In</button>
-                        <button onClick={handleNavigation} className="btn btn-lg btn-secondary btn-block">Sign Up</button>
+                        <button onClick={() => logIn()} className="btn btn-lg btn-primary btn-block">Log In</button>
+                        <button onClick={() => signUp()} className="btn btn-lg btn-secondary btn-block">Sign Up</button>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div className="errorMsg text-center">
+            {errorMsg}
         </div>
       </>
     );
