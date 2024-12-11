@@ -175,7 +175,7 @@ submitDataEl.addEventListener('click', function (event) {
 
 ## Create a new subdomain
 
-Step 1: Access AWS server with `ssh -i "/c/Users/home/Documents/CS 260/StoryWeaveProduction.pem" ubuntu@44.219.4.176`
+Step 1: Access AWS server with `ssh -i "/c/Users/home/Documents/CS 260/Repos/StoryWeaveProduction.pem" ubuntu@44.219.4.176`
 
 Step 2: Update Caddyfile with your new domain. It should look like this:
 ```
