@@ -4,6 +4,7 @@ import {Story} from './story/story';
 import {Edit} from './edit/edit';
 import {Weave} from './weave/weave';
 import {Pending} from './pending/pending';
+import {Users} from './users/users';
 
 import './App.css'
 
@@ -47,7 +48,7 @@ function App() {
                 <Route path='/edit' element={<Edit/>} />
                 <Route path='/weave' element={<Weave/>} />
                 <Route path='/pending' element={<Pending/>} />
-                <Route path='/users' element={<></>} />
+                <Route path='/users' element={<Users/>} />
                 <Route path='*' element={<Navigate to='/' replace />} />
               </Routes>
             </div>
