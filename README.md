@@ -99,3 +99,13 @@ For this deliverable I added backend endpoints that receives votes and returns t
 - [X] **Calls to third party endpoints** - I used the https://icanhazdadjoke.com/ API. You can see this in action on the edit page (edit.jsx). You get there by pressing "Read the Story" on the nax bar then selecting the option "+ Add Choice"
 - [x] **Backend service endpoints** - I made an endpoint for login based on simon's, then I aslso created endpoints to access and manipulate chapter and user data.
 - [x] **Frontend calls service endpoints** - I did this. edit, login, pending, users, and weave all call the backend through HTTP requests.
+
+## DB/Login deliverable
+
+I stored users and chapters in the database and updated chapters based on if they recieve admin approval. The flow of chapter data goes: create an entry in /edit, get approval in /pending, and then see it appear in /weave
+
+- [x] **Supports new user registration** - Users can create accounts and sign in
+- [x] **Supports existing user authentication and logout** - Yes, if you already created an account you can use it to sign in. A logout link appears in the navigation when you log in. However, I did not fix the bug where refreshing the applciation automatically logs you out.
+- [x] **Stores application data in MongoDB** - Yes, chapters are stored and later manipulated from the database
+- [x] **Stores and retrieves credentials in MongoDB** - Done
+- [x] **Restricts application functionality based upon authentication** - The nav links disappear if you are not logged in, however you can still access it through the url or api :(
