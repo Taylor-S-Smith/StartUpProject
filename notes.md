@@ -192,9 +192,10 @@ NOTE: Because each points to a unique service, each will need a unique port numb
 End with restarting caddy using `sudo service caddy restart`
 
 Step 3: Create a new service. This can be accomplished by:
-- Navigating to the newly created "new-subdomain" file in ther /services folder
-- Creating a new node server using `npm install express`
-- Create an index.js file. Use the following template, but replace the value 5000 with your chosen port number from Step 2.
+- Navigating to the /services folder
+- Creating a new folder named the same as your subdomain
+- Creating a new node server using `npm install express` inside the new folder
+- Create an index.js file. Use the following template, but replace the value 5000 with your chosen port number from Step 2 and replace 'subdomain' with the name of your subdomain.
 
 ```
 const express = require('express');
@@ -204,7 +205,7 @@ const app = express();
 const port = process.argv.length > 2 ? process.argv[2] : 5000;
 
 // Text to display for the service name
-const serviceName = process.argv.length > 3 ? process.argv[3] : 'html';
+const serviceName = process.argv.length > 3 ? process.argv[3] : 'subdomain';
 
 // Serve up the static content
 app.use(express.static('public'));
@@ -229,3 +230,80 @@ Step 4: Start the node service by using `pm2 start index.js --name new-subdomain
 You can verify that it is running properly by using pm2 status. Remember you can always remove your running services by using `pm2 stop process-name` and optionally `pm2 delete process-name`.
 
 NOTE: Processes you manually start will not service if you restart the aws server. Until you learn more about service management (ChatGPT reccommended Systemd) you will need to manually start up each subdomain that is not simon or startup.
+
+Step 5: Deploy!
+
+
+
+# React
+
+## Components
+
+### Function Style
+
+```
+<div>Component: <Demo who="Walke" /><div>
+
+function Demo(props) {
+  return <b>Hello {props.who}</b>;
+}
+
+<div>Component: <b>Hello Walke</b></div>
+```
+
+Component with internal state:
+
+```
+const Clicker = () => {
+  const [clicked, updateClicked] = React.useState(false);
+
+  const onClicked = (e) => {
+    updateClicked(!clicked);
+  };
+
+  return <p onClick={(e) => onClicked(e)}>clicked: {`${clicked}`}</p>;
+};
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<Clicker />);
+```
+
+
+### Literal Style
+```
+const hello = <div>Hello</div>;
+
+ReactDOM.render(hello, document.getElementById('root'));
+
+```
+
+## Router
+
+```
+// Inject the router into the application root DOM element
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  // BrowserRouter component that controls what is rendered
+  // NavLink component captures user navigation requests
+  // Routes component defines what component is routed to
+  <BrowserRouter>
+    <div className='app'>
+      <nav>
+        <NavLink to='/'>Home</Link>
+        <NavLink to='/about'>About</Link>
+        <NavLink to='/users'>Users</Link>
+      </nav>
+
+      <main>
+        <Routes>
+          <Route path='/' element={<Home />} exact />
+          <Route path='/about' element={<About />} />
+          <Route path='/users' element={<Users />} />
+          <Route path='*' element={<Navigate to='/' replace />} />
+        </Routes>
+      </main>
+    </div>
+  </BrowserRouter>
+);
+```
+
