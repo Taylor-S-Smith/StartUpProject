@@ -1,7 +1,14 @@
+import { useNavigate } from "react-router-dom"
 import './login.css'
 import AnAdventureAwaits from '/src/assets/AnAdventureAwaits.png';
 
 export function Login() {
+
+    const navigate = useNavigate();
+
+    const handleNavigation = () => {
+        navigate('/story');
+    }
 
     return (
       <>
@@ -26,7 +33,7 @@ export function Login() {
                             <label htmlFor="password">Password</label>
                             <input type="password" className="form-control" id="password" placeholder="********"/>
                         </div>
-                        <button className="btn btn-lg btn-secondary btn-block">Sign In</button>
+                        <button onClick={handleNavigation} className="btn btn-lg btn-secondary btn-block">Sign In</button>
                     </div>
                 </div>
             </div>

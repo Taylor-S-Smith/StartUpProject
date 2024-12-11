@@ -3,12 +3,6 @@ import './weave.css'
 
 export function Weave() {
 
-    const navigate = useNavigate();
-
-    const handleNavigation = () => {
-        navigate('/edit');
-    }
-
     return (
       <>
         <h1>All things are connected...</h1>

@@ -77,4 +77,16 @@ All pages were given CSS styling
 - [x] **Application text content** - Consistent fonts
 - [x] **Application images** - Made images properly resize
 
-Note: on the weave.html page (accessed by clicking "View ALl Sotry Segments") I still have my placeholder for the dependency graph. This is because I will be using a javascript library to display it, so I will wait until the Javascript section to implement it.
+Note: on the weave.html page (accessed by clicking "View All Story Segments") I still have my placeholder for the dependency graph. This is because I will be using a javascript library to display it, so I will wait until the Javascript section to implement it.
+
+## React deliverable
+
+I used javascript and react to make the backend cleaner, and to improve the user experience. Since my main functionality relies on a database, most of the data displayed on pages are just placeholders.
+
+- [x] **Bundled and transpiled** - Did this
+- [x] **Components** - Login, Pending, Story, Users, and Weave are all components. All data is mocked.
+  - [x] **login** - Pressing the login button takes you to the story page
+  - [x] **database** - My main functionality depends on data from the database. This is most prominant on the Users admin page. Currently data is hardcoded, but will be replaced later
+  - [x] **WebSocket** - I used a function to periodically increate the total pages so far and total choices so far on the Weave page. This will be what I use websockets for later
+- [x] **Router** - Routing between ass components works
+- [x] **Hooks** - Login, Edit, Pending, and Users all use the useNavigation hook to go to different URLs from a button press. Edit uses the useState hook to keep track of the Joke that it displays, though it won't properly work until we connect it to a third-party API, but is mocked out to the best of my current knowledge.
