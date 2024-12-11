@@ -35,7 +35,7 @@ export function Pending() {
   }
 
   async function denyChapter(chapterId) {
-    const response = await fetch('api/story/denyChapter', {
+    const response = await fetch('api/story/denychapter', {
         method: 'delete',
         body: JSON.stringify({ chapterId: chapterId}),
         headers: {

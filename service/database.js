@@ -1,3 +1,5 @@
+
+const { v4: uuIdv4 } = require('uuid');
 const config = require('./dbConfig.json');
 const bcrypt = require('bcrypt');
 const { MongoClient } = require('mongodb');
@@ -18,13 +20,13 @@ const chapterCollection = db.collection('chapter');
 });
 
 
-function getUser(username) {
-  return userCollection.findOne({username: username});
+async function getUser(username) {
+  return await userCollection.findOne({username: username});
 }
 
-function getAllUsers() {
+async function getAllUsers() {
   const cursor = userCollection.find();
-  return cursor.toArray();
+  return await cursor.toArray();
 }
 
 async function createUser(username, password, dateJoined) {
@@ -34,7 +36,7 @@ async function createUser(username, password, dateJoined) {
     username: username,
     password: passwordHash,
     dateJoined: dateJoined,
-    token: uuid.v4(),
+    token: uuIdv4(),
   };
 
   await userCollection.insertOne(user);

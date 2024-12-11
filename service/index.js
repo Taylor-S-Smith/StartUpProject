@@ -1,11 +1,9 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 const { v4: uuIdv4 } = require('uuid');
 const DB = require('./database.js');
 
 const app = express();
-
-let USER_GET_RID_OF_ME = {}
-let CHAPTERS_GET_RID_OF_ME = {}
 
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
 
@@ -24,13 +22,13 @@ apiRouter.get('/test', async (req, res) => {
 })
 
 apiRouter.post('/story/submitchapter', async (req, res) => {
-  const chapter = DB.createChapter(req.body.chapterTitle, req.body.chapterText, [req.body.proposedConnection], [], false);
+  const chapter = await DB.createChapter(req.body.chapterTitle, req.body.chapterText, [req.body.proposedConnection], [], false);
 
   res.send({Id: chapter.Id})
 })
 
 apiRouter.post('/story/approvechapter', async (req, res) => {
-  const numUpdated = DB.updateChapterApproval(req.body.chapterId, true)
+  const numUpdated = await DB.updateChapterApproval(req.body.chapterId, true)
   if(numUpdated > 0) {
     res.status(204).end();
   } else {
@@ -39,7 +37,7 @@ apiRouter.post('/story/approvechapter', async (req, res) => {
 })
 
 apiRouter.delete('/story/denychapter', async (req, res) => {
-  const numDeleted = DB.deleteChapter(req.body.Id);
+  const numDeleted = await DB.deleteChapter(req.body.chapterId);
 
   if(numDeleted > 0) {
     res.status(204).end();
@@ -49,7 +47,7 @@ apiRouter.delete('/story/denychapter', async (req, res) => {
 })
 
 apiRouter.get('/story/getchapter', async (req, res) => {
-  const chapter = DB.getChapter(req.body.chapterId);
+  const chapter = await DB.getChapter(req.body.chapterId);
   if(chapter) {
     res.send({chapter});
   } else {
@@ -58,19 +56,19 @@ apiRouter.get('/story/getchapter', async (req, res) => {
 })
 
 apiRouter.get('/story/getawaitingapproval', async (req, res) => {
-  const unapprovedChapters = Object.values(DB.getAllChapters()).filter(chapter => !chapter.isApproved)
+  const unapprovedChapters = Object.values(await DB.getAllChapters()).filter(chapter => !chapter.isApproved)
 
   res.send(unapprovedChapters);
 })
 
 apiRouter.get('/story/getapproved', async (req, res) => {
-  const approvedChapters = Object.values(DB.getAllChapters()).filter(chapter => chapter.isApproved)
+  const approvedChapters = Object.values(await DB.getAllChapters()).filter(chapter => chapter.isApproved)
 
   res.send(approvedChapters);
 })
 
 apiRouter.get('/users/getall', async (req, res) => {
-  const userArray = Object.values(DB.getAllUsers());
+  const userArray = Object.values(await DB.getAllUsers());
 
   res.send(userArray);
 })
@@ -90,24 +88,26 @@ apiRouter.get('/joke', async (req, res) => {
 //I am not sure how similar we were allowed to make it, since we were given the code. If is too similar I would be happy to remove it.
 
 apiRouter.post('/auth/signup', async (req, res) => {
-  const user = DB.getUser(req.body.username);
+  const user = await DB.getUser(req.body.username);
   if(user) {
     res.status(409).send({msg: 'A user already exists with that username'})
     return;
+  } else if(!req.body.username || !req.body.password) {
+    res.status(409).send({msg: 'Please fill both fields'})
+    return;
   } else {
-    const newUser = DB.createUser(req.body.username, req.body.password, req.body.dateJoined);
+    const newUser = await DB.createUser(req.body.username, req.body.password, req.body.dateJoined);
     res.send({ token: newUser.token })
     return;
   }
 })
 
 apiRouter.post('/auth/login', async (req, res) => {
-  const user = DB.getUser(req.body.username);
+  const user = await DB.getUser(req.body.username);
   if(user) {
     if(await bcrypt.compare(req.body.password, user.password)) {
-
-      possibleUser.token = uuIdv4();
-      res.send({ token: possibleUser.token })
+      user.token = uuIdv4();
+      res.send({ token: user.token })
       return;
     }
   }

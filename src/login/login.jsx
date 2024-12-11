@@ -1,12 +1,17 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom"
+import { useState, useEffect  } from "react";
 import './login.css'
 import AnAdventureAwaits from '/AnAdventureAwaits.png';
 
-export function Login() {
-    const [userName, setUserName] = React.useState(localStorage.getItem('userName') || '');
+export function Login({setAuthentication}) {
+    const [userName, setUserName] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [errorMsg, setErrorMsg] = React.useState(null);
+
+    useEffect(() => {
+        setAuthentication(false);
+      }, []);
 
     const navigate = useNavigate();
 
@@ -28,20 +33,12 @@ export function Login() {
             },
         });
         if(response?.status === 200) {
-            localStorage.setItem('userName', userName);
+            setAuthentication(true);
             navigate('/story');
         } else {
             const error = await response.json();
             setErrorMsg(`Error: ${error.msg}`);
-        }
-        
-
-        if(response?.status === 200) {
-            localStorage.setItem('userName', userName);
-            navigate('/story');
-        } else {
-            const error = await response.json();
-            setErrorMsg(`Error: ${body.msg}`);
+            console.error(error.msg);
         }
     }
 
@@ -62,11 +59,11 @@ export function Login() {
                     <div className="row justify-content-center">
                         <div className="pt-3">
                             <label htmlFor="username">Username</label>
-                            <input type="text"  className="form-control" id="username" value={userName} onChange={(e) => setUserName(e.target.value)} placeholder="Type your Username"/>
+                            <input type="text"  className="form-control" id="username" onChange={(e) => setUserName(e.target.value)} placeholder="Type your Username"/>
                         </div>
                         <div className="py-3">
                             <label htmlFor="password">Password</label>
-                            <input type="password" className="form-control" id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="********"/>
+                            <input type="password" className="form-control" id="password" onChange={(e) => setPassword(e.target.value)} placeholder="********"/>
                         </div>
                         <button onClick={() => logIn()} className="btn btn-lg btn-primary btn-block">Log In</button>
                         <button onClick={() => signUp()} className="btn btn-lg btn-secondary btn-block">Sign Up</button>

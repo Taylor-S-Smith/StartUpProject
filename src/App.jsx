@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, NavLink, Route, Routes, Navigate } from 'react-router-dom';
+import { useState  } from "react";
 import {Login} from './login/login';
 import {Story} from './story/story';
 import {Edit} from './edit/edit';
@@ -10,6 +11,8 @@ import {Users} from './users/users';
 import './App.css'
 
 function App() {
+  
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
 
   return (
     <>
@@ -23,20 +26,28 @@ function App() {
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
               <ul className="navbar-nav mr-auto">
                 <li className="nav-item">
-                  <NavLink className="nav-link" to='/'>Login</NavLink>
+                  <NavLink className="nav-link" to='/'>{isAuthenticated ? 'Logout' : 'Login'}</NavLink>
                 </li>
-                <li className="nav-item">
-                  <NavLink className="nav-link" to='/story'>Read the Story</NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-link" to='/weave'>View the Weave</NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-link" to='/pending'>ADMIN: Pending Submissions</NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-link" to='/users'>ADMIN: View Users</NavLink>
-                </li>
+                {isAuthenticated && (
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to='/story'>Read the Story</NavLink>
+                  </li>
+                )}
+                {isAuthenticated && (
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to='/weave'>View the Weave</NavLink>
+                  </li>
+                )}
+                {isAuthenticated && (
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to='/pending'>ADMIN: Pending Submissions</NavLink>
+                  </li>
+                )}
+                {isAuthenticated && (
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to='/users'>ADMIN: View Users</NavLink>
+                  </li>
+                )}
               </ul>
             </div>
           </nav>
@@ -44,7 +55,7 @@ function App() {
           <main className="row justify-content-center my-3">
             <div className="col-11">  
               <Routes>
-                <Route path='/' element={<Login />} exact />
+                <Route path='/' element={<Login setAuthentication={setIsAuthenticated}/>} exact />
                 <Route path='/story' element={<Story chapterId="1"/>} />
                 <Route path='/edit/:connectionId' element={<Edit/>} />
                 <Route path='/weave' element={<Weave/>} />
