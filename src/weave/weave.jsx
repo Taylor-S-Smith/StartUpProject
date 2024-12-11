@@ -1,38 +1,64 @@
-import { useNavigate } from "react-router-dom"
+import React from 'react';
+import { useState, useEffect  } from "react";
 import './weave.css'
 
 export function Weave() {
+    const [chapters, setChapters] = useState([]);
+
+    useEffect(() => {
+        getChapters();
+    }, []);
+
+    async function getChapters() {
+        const response = await fetch('api/story/getapproved', {
+          method: 'get',
+          headers: {
+              'Content-type': 'application/json; charset=UTF-8',
+          },
+        });
+    
+        let jsonResponse = await response.json();
+    
+        setChapters(jsonResponse);
+    }
+
+    const chapterRows = chapters.map((chapter) => {
+        return (
+          <tr key={chapter.Id}>
+            <td>{chapter.chapterTitle}</td>
+            <td>{chapter.chapterText}</td>
+            <td>{chapter.connectedFrom.join(', ')}</td>
+            <td>{chapter.connectedTo.join(', ')}</td>
+          </tr>
+        );
+    });
 
     return (
       <>
         <h1>All things are connected...</h1>
 
-        <div className="my-3" id="weaveDependencyGraph">
-        
-        <div id="graphBorder" className="my-5">
-            <div className="mb-3">
-                <b>Properly creating this dependency graph will require learning a third party java-script library</b>
-            </div>
-            <div>
-            Chapter 1 -{">"} Chapter 2 -{">"} Chapter 6
-            </div>
-            <div>
-            |-{">"} Chapter 3 -{">"} Chapter 4
-            </div>
-            <div>
-                |-Chapter 5
-            </div>
-        </div>
-        
-        </div>
+        <table className="table table-bordered mt-4">
+            <thead>
+            <tr>
+                <th scope="col">Chapter Title</th>
+                <th scope="col">Chapter Text</th>
+                <th scope="col">Conections From</th>
+                <th scope="col">Connections To</th>
+            </tr>
+            </thead>          
+            <tbody>
+                {chapterRows}
+            </tbody>
+            
+        </table>
         
         <div>
-        <div id="pageCount">
-            Total Pages So Far: Connect to database
-        </div>
-        <div id="choiceCount">
-            Total Choices So Far: Connect to database
-        </div>  
+            <div id="pageCount">
+                Total Pages So Far: Connect to database
+            </div>
+            <div id="choiceCount">
+                Total Choices So Far: Connect to database
+            </div>  
         </div>
       </>
     );

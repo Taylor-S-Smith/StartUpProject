@@ -1,11 +1,11 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom"
 
-export function Story() {
+export function Story({chapterId}) {
     const navigate = useNavigate();
 
     const handleNavigation = () => {
-        navigate('/edit');
+        navigate(`/edit/${chapterId}`);
     }
 
     return (

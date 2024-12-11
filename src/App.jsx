@@ -16,7 +16,7 @@ function App() {
       <BrowserRouter>
         <div className='app'>
           <nav className="navbar navbar-expand-lg navbar-light bg-light p-3">
-            <a className="navbar-brand" href="index.html">Storyweave</a>
+            <a className="navbar-brand" href="/">Storyweave</a>
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span className="navbar-toggler-icon"></span>
             </button>
@@ -45,8 +45,8 @@ function App() {
             <div className="col-11">  
               <Routes>
                 <Route path='/' element={<Login />} exact />
-                <Route path='/story' element={<Story/>} />
-                <Route path='/edit' element={<Edit/>} />
+                <Route path='/story' element={<Story chapterId="1"/>} />
+                <Route path='/edit/:connectionId' element={<Edit/>} />
                 <Route path='/weave' element={<Weave/>} />
                 <Route path='/pending' element={<Pending/>} />
                 <Route path='/users' element={<Users/>} />

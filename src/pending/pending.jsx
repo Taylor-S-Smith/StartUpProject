@@ -49,7 +49,7 @@ export function Pending() {
 
   const chapterRows = chapters.map((chapter) => {
     return (
-      <tr id={chapter.Id} key={chapter.Id}>
+      <tr key={chapter.Id}>
         <td>{chapter.chapterTitle}</td>
         <td>{chapter.chapterText}</td>
         <td>

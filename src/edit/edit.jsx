@@ -1,13 +1,15 @@
 import React from 'react';
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useState } from "react";
 
 import './edit.css'
 
-export function Edit(connectionId) {
+export function Edit() {
     const [jokeText, setJokeText] = useState(getNewJoke);
     const [chapterTitle, setChapterTitle] = React.useState('');
     const [chapterText, setChapterText] = React.useState('');
+
+    const { connectionId } = useParams()
 
     const navigate = useNavigate();
 
@@ -19,14 +21,19 @@ export function Edit(connectionId) {
 
     async function submitChapter() {
 
-        const response = await fetch('api/story/submitchapter', {
+        const response = await fetch('/api/story/submitchapter', {
             method: 'post',
             body: JSON.stringify({ chapterTitle: chapterTitle, chapterText: chapterText, proposedConnection: connectionId}),
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
             },
         });
+        if(response?.status === 200) {
+            navigate('/story');
+        }
+    }
 
+    const handleNavigation = () => {
         navigate('/story');
     }
 
