@@ -1,22 +1,43 @@
 import React from 'react';
 import { useNavigate, useParams } from "react-router-dom"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import './edit.css'
 
 export function Edit() {
-    const [jokeText, setJokeText] = useState(getNewJoke);
+    const [jokeText, setJokeText] = useState('');
     const [chapterTitle, setChapterTitle] = React.useState('');
     const [chapterText, setChapterText] = React.useState('');
 
     const { connectionId } = useParams()
 
+    
+    useEffect(() => {
+        getNewJoke();
+      }, []);
+
     const navigate = useNavigate();
 
-    function getNewJoke() {
-        //TODO: Connect this to external API
-        console.log("Don't forget to implement this for a future pass-off!")
-        return "External API Error: Not implemented Yet";
+    async function getNewJoke() {
+
+        console.log("Before")
+        const response = await fetch("/api/joke", {
+            method: 'get',
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+        });
+        console.log("Continue")
+
+
+        if (response.ok) {  // Check if the status is OK
+            
+            console.log("worked")
+            let jsonResponse = await response.json();
+            setJokeText(jsonResponse.joke);
+        } else {
+            console.error('Failed to fetch joke:', response.status, response.statusText);
+        }
     }
 
     async function submitChapter() {
@@ -58,7 +79,7 @@ export function Edit() {
         <div className="mt-4">
             Here's a funny joke for inspiration!
             <div id="joke" className="bg-light text-dark">{jokeText}</div>
-            <button className="btn btn-lg btn-secondary btn-block my-3" onClick={() => setJokeText(getNewJoke)}>Get New Joke</button>
+            <button className="btn btn-lg btn-secondary btn-block my-3" onClick={async () => getNewJoke()}>Get New Joke</button>
 
         </div>
       </>

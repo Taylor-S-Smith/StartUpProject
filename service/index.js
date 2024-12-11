@@ -75,6 +75,17 @@ apiRouter.get('/users/getall', async (req, res) => {
   res.send(userArray);
 })
 
+apiRouter.get('/joke', async (req, res) => {
+  const response = await fetch("https://icanhazdadjoke.com/", {
+    method: 'GET',
+    headers: {
+        'Accept': 'application/json'
+    },
+  });
+  const data = await response.json();
+  res.send(data);
+})
+
 //NOTE TO GRADER: This login logic was copied from simon with some changes to reflect my applications usage of user data
 //I am not sure how similar we were allowed to make it, since we were given the code. If is too similar I would be happy to remove it.
 
