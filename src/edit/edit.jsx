@@ -26,13 +26,7 @@ export function Edit(connectionId) {
                 'Content-type': 'application/json; charset=UTF-8',
             },
         });
-        if(response?.status === 200) {
-            localStorage.setItem('userName', userName);
-            navigate('/story');
-        }
-    }
 
-    const handleNavigation = () => {
         navigate('/story');
     }
 

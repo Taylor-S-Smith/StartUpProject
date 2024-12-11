@@ -1,46 +1,82 @@
-import { useNavigate } from "react-router-dom"
+import React from 'react';
+import { useState, useEffect  } from "react";
 import './pending.css'
 
 export function Pending() {
+  const [chapters, setChapters] = useState([]);
 
-    const navigate = useNavigate();
+  useEffect(() => {
+    getChapters();
+  }, []);
 
-    const handleNavigation = () => {
-        navigate('/story');
-    }
+  async function getChapters() {
+    const response = await fetch('api/story/getawaitingapproval', {
+      method: 'get',
+      headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+      },
+    });
 
+    let jsonResponse = await response.json();
+
+    setChapters(jsonResponse);
+  }
+
+  async function approveChapter(chapterId) {
+    const response = await fetch('api/story/approvechapter', {
+        method: 'post',
+        body: JSON.stringify({ chapterId: chapterId}),
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        },
+    });
+
+    getChapters();
+  }
+
+  async function denyChapter(chapterId) {
+    const response = await fetch('api/story/denyChapter', {
+        method: 'delete',
+        body: JSON.stringify({ chapterId: chapterId}),
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        },
+    });
+
+    getChapters();
+  }
+
+
+  const chapterRows = chapters.map((chapter) => {
     return (
-      <>
-        <h1>Pending Approval</h1>
-
-        <table className="table table-bordered mt-4">
-          <tbody>
-            <tr>
-              <td>Chapter 13</td>
-              <td>By: User3918</td>
-              <td>
-                <button onClick={handleNavigation} className="btn btn-primary btn-block">View Submission</button>
-              </td>
-              <td>
-                <button className="btn btn-lg btn-success btn-block">Approve</button>
-                <button className="btn btn-lg btn-danger btn-block">Deny</button>
-              </td>
-              
-            </tr>
-            <tr>
-                <td>Chapter 14</td>
-                <td>By: User007</td>
-                <td>
-                  <button onClick={handleNavigation} className="btn btn-primary btn-block">View Submission</button>
-                </td>
-                <td>
-                  <button className="btn btn-lg btn-success btn-block">Approve</button>
-                  <button className="btn btn-lg btn-danger btn-block">Deny</button>
-                </td>
-            </tr>
-          </tbody>
-          
-        </table>
-      </>
+      <tr id={chapter.Id} key={chapter.Id}>
+        <td>{chapter.chapterTitle}</td>
+        <td>{chapter.chapterText}</td>
+        <td>
+          <button className="btn btn-lg btn-success btn-block" onClick={() => approveChapter(chapter.Id)}>Approve</button>
+          <button className="btn btn-lg btn-danger btn-block" onClick={() => denyChapter(chapter.Id)}>Deny</button>
+        </td>
+      </tr>
     );
+  });
+
+  return (
+    <>
+      <h1>Pending Approval</h1>
+
+      <table className="table table-bordered mt-4">
+        <thead>
+          <tr>
+            <th scope="col">Chapter Title</th>
+            <th scope="col">Chapter Text</th>
+            <th scope="col">Contributions</th>
+          </tr>
+        </thead>          
+        <tbody>
+          {chapterRows}
+        </tbody>
+        
+      </table>
+    </>
+  );
 }

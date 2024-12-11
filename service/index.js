@@ -1,5 +1,5 @@
 import express from 'express';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuIdv4 } from 'uuId';
 
 const app = express();
 
@@ -8,7 +8,7 @@ let chapters = {}
 
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
 
-// Built-in middleware
+// Built-in mIddleware
 app.use(express.json());
 app.use(express.static('public'));
 
@@ -16,17 +16,17 @@ app.use(express.static('public'));
 var apiRouter = express.Router();
 app.use(`/api`, apiRouter);
 
-// Custom Middleware
+// Custom MIddleware
 
 apiRouter.get('/test', async (req, res) => {
   res.status(200).end();
 })
 
 apiRouter.post('/story/submitchapter', async (req, res) => {
-  const chapter = {id: uuidv4(), chapterTitle: req.body.chapterTitle, chapterText: req.body.chapterText, connectedFrom: [req.body.proposedConnection], connectedTo: [], isApproved: false}
-  chapters[chapter.id] = chapter;
+  const chapter = {Id: uuIdv4(), chapterTitle: req.body.chapterTitle, chapterText: req.body.chapterText, connectedFrom: [req.body.proposedConnection], connectedTo: [], isApproved: false}
+  chapters[chapter.Id] = chapter;
 
-  res.send({id: chapter.id})
+  res.send({Id: chapter.Id})
 })
 
 apiRouter.post('/story/approvechapter', async (req, res) => {
@@ -35,7 +35,7 @@ apiRouter.post('/story/approvechapter', async (req, res) => {
     chapter.isApproved = true;
     res.status(204).end();
   } else {
-    res.status(404).send({msg: 'No chapter exists with that id'});
+    res.status(404).send({msg: 'No chapter exists with that Id'});
   }
 })
 
@@ -44,7 +44,7 @@ apiRouter.delete('/story/denychapter', async (req, res) => {
     delete chapters[req.body.chapterId];
     res.status(204).end();
   } else {
-    res.status(404).send({msg: 'No chapter exists with that id'});
+    res.status(404).send({msg: 'No chapter exists with that Id'});
   }
 })
 
@@ -53,7 +53,7 @@ apiRouter.get('/story/getchapter', async (req, res) => {
   if(chapter) {
     res.send({chapter});
   } else {
-    res.status(404).send({msg: 'No chapter exists with that id'});
+    res.status(404).send({msg: 'No chapter exists with that Id'});
   }
 })
 
@@ -78,7 +78,7 @@ apiRouter.post('/auth/signup', async (req, res) => {
     res.status(409).send({msg: 'A user already exists with that username'})
     return;
   } else {
-    const user = {username: req.body.username, password: req.body.password, dateJoined: req.body.dateJoined, token: uuidv4()}
+    const user = {username: req.body.username, password: req.body.password, dateJoined: req.body.dateJoined, token: uuIdv4()}
     users[user.username] = user;
     res.send({ token: user.token })
     return;
@@ -88,7 +88,7 @@ apiRouter.post('/auth/signup', async (req, res) => {
 apiRouter.post('/auth/login', async (req, res) => {
   const possibleUser = users[req.body.username];
   if(possibleUser && possibleUser.password === req.body.password) {
-    possibleUser.token = uuidv4();
+    possibleUser.token = uuIdv4();
     res.send({ token: possibleUser.token })
     return;
   }
@@ -108,7 +108,7 @@ apiRouter.delete('/auth/logout', (req, res) => {
 });
 */
 
-// Obligatory end middleware
+// Obligatory end mIddleware
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
