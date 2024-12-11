@@ -89,3 +89,13 @@ I used javascript and react to make the backend cleaner, and to improve the user
   - [x] **database** - My main functionality depends on data from the database. This is most prominant on the Users admin page. Currently data is hardcoded, but will be replaced later
 - [x] **Router** - Routing between all components works
 - [x] **Hooks** - Login, Edit, Pending, and Users all use the useNavigation hook to go to different URLs from a button press. Edit uses the useState hook to keep track of the Joke that it displays, though it won't properly work until we connect it to a third-party API, but is mocked out to the best of my current knowledge.
+
+## Service deliverable
+
+For this deliverable I added backend endpoints that receives votes and returns the voting totals.
+
+- [x] **Node.js/Express HTTP service** - I did this.
+- [x] **Static middleware for frontend** - I did this. This is how my picture and favicon are displayed.
+- [X] **Calls to third party endpoints** - I used the https://icanhazdadjoke.com/ API. You can see this in action on the edit page (edit.jsx). You get there by pressing "Read the Story" on the nax bar then selecting the option "+ Add Choice"
+- [x] **Backend service endpoints** - I made an endpoint for login based on simon's, then I aslso created endpoints to access and manipulate chapter and user data.
+- [x] **Frontend calls service endpoints** - I did this. edit, login, pending, users, and weave all call the backend through HTTP requests.
