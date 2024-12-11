@@ -41,13 +41,13 @@ async function createUser(username, password) {
   return user;
 }
 
-function getChapter(Id) {
-  return chapterCollection.findOne({Id: Id});
+async function getChapter(Id) {
+  return await chapterCollection.findOne({Id: Id});
 }
 
-function getAllChapters() {
+async function getAllChapters() {
   const cursor = chapterCollection.find();
-  return cursor.toArray();
+  return await cursor.toArray();
 }
 
 async function createChapter(chapterTitle, chapterText, connectedFrom, connectedTo, isApproved) {

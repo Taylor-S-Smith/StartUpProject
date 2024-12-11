@@ -9,7 +9,7 @@ let CHAPTERS_GET_RID_OF_ME = {}
 
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
 
-// Built-in mIddleware
+// Built-in middleware
 app.use(express.json());
 app.use(express.static('public'));
 
@@ -17,7 +17,7 @@ app.use(express.static('public'));
 var apiRouter = express.Router();
 app.use(`/api`, apiRouter);
 
-// Custom MIddleware
+// Custom Middleware
 
 apiRouter.get('/test', async (req, res) => {
   res.status(200).end();
@@ -49,7 +49,7 @@ apiRouter.delete('/story/denychapter', async (req, res) => {
 })
 
 apiRouter.get('/story/getchapter', async (req, res) => {
-  const chapter = CHAPTERS_GET_RID_OF_ME[req.body.chapterId];
+  const chapter = DB.getChapter(req.body.chapterId);
   if(chapter) {
     res.send({chapter});
   } else {
@@ -58,19 +58,19 @@ apiRouter.get('/story/getchapter', async (req, res) => {
 })
 
 apiRouter.get('/story/getawaitingapproval', async (req, res) => {
-  const unapprovedChapters = Object.values(CHAPTERS_GET_RID_OF_ME).filter(chapter => !chapter.isApproved)
+  const unapprovedChapters = Object.values(DB.getAllChapters()).filter(chapter => !chapter.isApproved)
 
   res.send(unapprovedChapters);
 })
 
 apiRouter.get('/story/getapproved', async (req, res) => {
-  const approvedChapters = Object.values(CHAPTERS_GET_RID_OF_ME).filter(chapter => chapter.isApproved)
+  const approvedChapters = Object.values(DB.getAllChapters()).filter(chapter => chapter.isApproved)
 
   res.send(approvedChapters);
 })
 
 apiRouter.get('/users/getall', async (req, res) => {
-  const userArray = Object.values(USER_GET_RID_OF_ME);
+  const userArray = Object.values(DB.getAllUsers());
 
   res.send(userArray);
 })
