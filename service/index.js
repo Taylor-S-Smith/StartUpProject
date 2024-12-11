@@ -24,16 +24,14 @@ apiRouter.get('/test', async (req, res) => {
 })
 
 apiRouter.post('/story/submitchapter', async (req, res) => {
-  const chapter = {Id: uuIdv4(), chapterTitle: req.body.chapterTitle, chapterText: req.body.chapterText, connectedFrom: [req.body.proposedConnection], connectedTo: [], isApproved: false}
-  CHAPTERS_GET_RID_OF_ME[chapter.Id] = chapter;
+  const chapter = DB.createChapter(req.body.chapterTitle, req.body.chapterText, [req.body.proposedConnection], [], false);
 
   res.send({Id: chapter.Id})
 })
 
 apiRouter.post('/story/approvechapter', async (req, res) => {
-  const chapter = CHAPTERS_GET_RID_OF_ME[req.body.chapterId];
-  if(chapter) {
-    chapter.isApproved = true;
+  const numUpdated = DB.updateChapterApproval(req.body.chapterId, true)
+  if(numUpdated > 0) {
     res.status(204).end();
   } else {
     res.status(404).send({msg: 'No chapter exists with that Id'});
@@ -41,8 +39,9 @@ apiRouter.post('/story/approvechapter', async (req, res) => {
 })
 
 apiRouter.delete('/story/denychapter', async (req, res) => {
-  if(CHAPTERS_GET_RID_OF_ME[req.body.chapterId]) {
-    delete CHAPTERS_GET_RID_OF_ME[req.body.chapterId];
+  const numDeleted = DB.deleteChapter(req.body.Id);
+
+  if(numDeleted > 0) {
     res.status(204).end();
   } else {
     res.status(404).send({msg: 'No chapter exists with that Id'});

@@ -55,5 +55,32 @@ async function createChapter(chapterTitle, chapterText, connectedFrom, connected
 
   await chapterCollection.insertOne(chapter);
 
-  return user;
+  return chapter;
 }
+
+async function updateChapterApproval(id, approvalStatus) {
+  const chapter = await chapterCollection.findOne({Id: id});
+  chapter.isApproved = approvalStatus;
+
+  const result = await chapterCollection.updateOne({ Id: id }, { $set: chapter });
+
+  console.log(`${result.matchedCount} records were updated`);
+  return result.matchedCount;
+}
+
+async function deleteChapter(id) {
+  const result = await chapterCollection.deleteOne({Id: id});
+
+  return result.deletedCount;
+}
+
+module.exports = {
+  getUser,
+  getAllUsers,
+  createUser,
+  getChapter,
+  getAllChapters,
+  createChapter,
+  updateChapterApproval,
+  deleteChapter
+};
