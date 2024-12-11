@@ -22,7 +22,7 @@ export function Login() {
 
         const response = await fetch(endpoint, {
             method: 'post',
-            body: JSON.stringify({ username: userName, password: password, dateJoined: Date.UTC()}),
+            body: JSON.stringify({ username: userName, password: password, dateJoined: Date.now()}),
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
             },

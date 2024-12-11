@@ -69,6 +69,12 @@ apiRouter.get('/story/getapproved', async (req, res) => {
   res.send(approvedChapters);
 })
 
+apiRouter.get('/users/getall', async (req, res) => {
+  const userArray = Object.values(users);
+
+  res.send(userArray);
+})
+
 //NOTE TO GRADER: This login logic was copied from simon with some changes to reflect my applications usage of user data
 //I am not sure how similar we were allowed to make it, since we were given the code. If is too similar I would be happy to remove it.
 

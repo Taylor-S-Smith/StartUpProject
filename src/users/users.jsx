@@ -1,7 +1,36 @@
-import { useNavigate } from "react-router-dom"
+import React from 'react';
+import { useState, useEffect  } from "react";
 import './users.css'
 
 export function Users() {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+      getUsers();
+  }, []);
+
+  async function getUsers() {
+      const response = await fetch('api/users/getall', {
+        method: 'get',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        },
+      });
+  
+      let jsonResponse = await response.json();
+  
+      setUsers(jsonResponse);
+  }
+
+  const userRows = users.map((user) => {
+
+    return (
+      <tr key={user.username}>
+        <td>{user.username}</td>
+        <td>{user.dateJoined}</td>
+      </tr>
+    );
+  });
 
     return (
       <>
@@ -12,25 +41,10 @@ export function Users() {
             <tr>
               <th scope="col">Username</th>
               <th scope="col">Date Joined</th>
-              <th scope="col">Contributions</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>User3918</td>
-              <td>10/27/2024</td>
-              <td>109</td>
-            </tr>
-            <tr>
-              <td>User04620</td>
-              <td>07/13/2021</td>
-              <td>1</td>
-            </tr>
-            <tr>
-              <td>User007</td>
-              <td>01/01/2020</td>
-              <td>0</td>
-            </tr>
+            {userRows}
           </tbody>
         </table>
       </>
