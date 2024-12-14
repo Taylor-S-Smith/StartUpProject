@@ -1,9 +1,7 @@
 import React from 'react';
 import { BrowserRouter, NavLink, Route, Routes, Navigate } from 'react-router-dom';
-import { useState  } from "react";
 import {Login} from './login/login';
 import {Story} from './story/story';
-import {Edit} from './edit/edit';
 import {Weave} from './weave/weave';
 import {Pending} from './pending/pending';
 import {Users} from './users/users';
@@ -11,8 +9,9 @@ import {Users} from './users/users';
 import './App.css'
 
 function App() {
+  const INITIAL_CHAPTER_ID = '5f9519cd-940b-4462-83f7-225be2856391'
   
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const [isAuthenticated, setIsAuthenticated] = React.useState(true);
 
   return (
     <>
@@ -52,30 +51,30 @@ function App() {
             </div>
           </nav>
 
-          <main className="row justify-content-center my-3">
-            <div className="col-11">  
-              <Routes>
-                <Route path='/' element={<Login setAuthentication={setIsAuthenticated}/>} exact />
-                <Route path='/story' element={<Story chapterId="1"/>} />
-                <Route path='/edit/:connectionId' element={<Edit/>} />
-                <Route path='/weave' element={<Weave/>} />
-                <Route path='/pending' element={<Pending/>} />
-                <Route path='/users' element={<Users/>} />
-                <Route path='*' element={<Navigate to='/' replace />} />
-              </Routes>
+          <main className="container-fluid my-3">
+            <div className="row justify-content-center">
+              <div className="col-11">
+                <Routes>
+                  <Route path='/' element={<Login setAuthentication={setIsAuthenticated}/>} exact />
+                  <Route path='/story' element={<Story initialChapterId={INITIAL_CHAPTER_ID}/>} />
+                  <Route path='/weave' element={<Weave/>} />
+                  <Route path='/pending' element={<Pending/>} />
+                  <Route path='/users' element={<Users/>} />
+                  <Route path='*' element={<Navigate to='/' replace />} />
+                </Routes>
+              </div>
             </div>
           </main>
         </div>
       </BrowserRouter>
 
-      <footer>
-        <div className="row text-center justify-content-center">
-          <hr />
-          <span className="text-reset">Created by Taylor Smith</span>
-          <br />
-          <div className="col-11">
-            <a href="https://github.com/tss67/StartUpProject">GitHub</a>
-          </div>
+
+      <hr />
+
+      <footer  className="container-fluid">
+        <div className="row text-center">
+          <span>Created by Taylor Smith</span>
+          <a href="https://github.com/tss67/StartUpProject">GitHub</a>
         </div>
       </footer>
     </>

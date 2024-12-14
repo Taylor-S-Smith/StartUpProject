@@ -22,7 +22,7 @@ apiRouter.get('/test', async (req, res) => {
 })
 
 apiRouter.post('/story/submitchapter', async (req, res) => {
-  const chapter = await DB.createChapter(req.body.chapterTitle, req.body.chapterText, [req.body.proposedConnection], [], false);
+  const chapter = await DB.createChapter(req.body.chapterTitle, req.body.choiceText, req.body.chapterText, [req.body.proposedConnection], [], false);
 
   res.send({Id: chapter.Id})
 })
@@ -46,8 +46,8 @@ apiRouter.delete('/story/denychapter', async (req, res) => {
   }
 })
 
-apiRouter.get('/story/getchapter', async (req, res) => {
-  const chapter = await DB.getChapter(req.body.chapterId);
+apiRouter.get('/story/getchapter/:chapterId', async (req, res) => {
+  const chapter = await DB.getChapter(req.params.chapterId);
   if(chapter) {
     res.send({chapter});
   } else {
@@ -128,7 +128,7 @@ apiRouter.delete('/auth/logout', (req, res) => {
 });
 */
 
-// Obligatory end mIddleware
+// Obligatory end middleware
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });

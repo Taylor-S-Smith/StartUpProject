@@ -24,9 +24,9 @@ export function Weave() {
 
     const chapterRows = chapters.map((chapter) => {
         return (
-          <tr key={chapter.Id}>
-            <td>{chapter.chapterTitle}</td>
-            <td>{chapter.chapterText}</td>
+          <tr key={chapter._id}>
+            <td>{chapter.Title}</td>
+            <td>{chapter.Text}</td>
             <td>{chapter.connectedFrom.join(', ')}</td>
             <td>{chapter.connectedTo.join(', ')}</td>
           </tr>

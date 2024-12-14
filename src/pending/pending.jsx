@@ -49,12 +49,12 @@ export function Pending() {
 
   const chapterRows = chapters.map((chapter) => {
     return (
-      <tr key={chapter.Id}>
-        <td>{chapter.chapterTitle}</td>
-        <td>{chapter.chapterText}</td>
+      <tr key={chapter._id}>
+        <td>{chapter.Title}</td>
+        <td>{chapter.Text}</td>
         <td>
-          <button className="btn btn-lg btn-success btn-block" onClick={() => approveChapter(chapter.Id)}>Approve</button>
-          <button className="btn btn-lg btn-danger btn-block" onClick={() => denyChapter(chapter.Id)}>Deny</button>
+          <button className="btn btn-lg btn-success btn-block" onClick={() => approveChapter(chapter._id)}>Approve</button>
+          <button className="btn btn-lg btn-danger btn-block" onClick={() => denyChapter(chapter._id)}>Deny</button>
         </td>
       </tr>
     );

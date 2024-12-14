@@ -20,6 +20,8 @@ const chapterCollection = db.collection('chapter');
 });
 
 
+// USERS
+
 async function getUser(username) {
   return await userCollection.findOne({username: username});
 }
@@ -44,8 +46,10 @@ async function createUser(username, password, dateJoined) {
   return user;
 }
 
+// CHAPTERS
+
 async function getChapter(Id) {
-  return await chapterCollection.findOne({Id: Id});
+  return await chapterCollection.findOne({_id: Id});
 }
 
 async function getAllChapters() {
@@ -53,8 +57,8 @@ async function getAllChapters() {
   return await cursor.toArray();
 }
 
-async function createChapter(chapterTitle, chapterText, connectedFrom, connectedTo, isApproved) {
-  const chapter = {Id: uuIdv4(), chapterTitle: chapterTitle, chapterText: chapterText, connectedFrom: connectedFrom, connectedTo: connectedTo, isApproved: isApproved}
+async function createChapter(title, choiceText, text, connectedFrom, connectedTo, creator, isApproved) {
+  const chapter = {_id: uuIdv4(), Title: title, ChoiceText: choiceText, Text: text, connectedFrom: connectedFrom, connectedTo: connectedTo, Creator: creator, isApproved: isApproved}
 
   await chapterCollection.insertOne(chapter);
 
@@ -62,17 +66,31 @@ async function createChapter(chapterTitle, chapterText, connectedFrom, connected
 }
 
 async function updateChapterApproval(id, approvalStatus) {
-  const chapter = await chapterCollection.findOne({Id: id});
+  const chapter = await chapterCollection.findOne({_id: id});
   chapter.isApproved = approvalStatus;
 
-  const result = await chapterCollection.updateOne({ Id: id }, { $set: chapter });
+  if (approvalStatus === true) {
+    chapter.connectedFrom.forEach((connection) => addToConnection(connection, chapter._id));
+  }
+
+  const result = await chapterCollection.updateOne({ _id: id }, { $set: chapter });
+
+  console.log(`${result.matchedCount} records were updated`);
+  return result.matchedCount;
+}
+
+async function addToConnection(id, connection) {
+  const chapter = await chapterCollection.findOne({_id: id});
+  chapter.connectedTo.push(connection);
+
+  const result = await chapterCollection.updateOne({ _id: id }, { $set: chapter });
 
   console.log(`${result.matchedCount} records were updated`);
   return result.matchedCount;
 }
 
 async function deleteChapter(id) {
-  const result = await chapterCollection.deleteOne({Id: id});
+  const result = await chapterCollection.deleteOne({_id: id});
 
   return result.deletedCount;
 }
