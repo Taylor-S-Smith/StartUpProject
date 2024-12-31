@@ -1,14 +1,13 @@
 
 const { v4: uuIdv4 } = require('uuid');
 const config = require('./dbConfig.json');
-const bcrypt = require('bcrypt');
 const { MongoClient } = require('mongodb');
 
 const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
 const client = new MongoClient(url);
 const db = client.db('startup');
 
-const userCollection = db.collection('user');
+const userCollection = db.collection('User');
 const chapterCollection = db.collection('chapter');
 
 (async function testConnection() {
@@ -26,19 +25,23 @@ async function getUser(username) {
   return await userCollection.findOne({username: username});
 }
 
+async function getUserById(userId) {
+  return await userCollection.findOne({_id: userId});
+}
+
 async function getAllUsers() {
   const cursor = userCollection.find();
   return await cursor.toArray();
 }
 
-async function createUser(username, password, dateJoined) {
-  const passwordHash = await bcrypt.hash(password, 10);
+async function createUser(username, passwordHash, salt, dateJoined) {
 
   const user = {
     username: username,
-    password: passwordHash,
+    passwordHash: passwordHash,
+    salt: salt,
     dateJoined: dateJoined,
-    token: uuIdv4(),
+    admin: false,
   };
 
   await userCollection.insertOne(user);
@@ -97,11 +100,13 @@ async function deleteChapter(id) {
 
 module.exports = {
   getUser,
+  getUserById,
   getAllUsers,
   createUser,
   getChapter,
   getAllChapters,
   createChapter,
   updateChapterApproval,
-  deleteChapter
+  deleteChapter,
+  client
 };

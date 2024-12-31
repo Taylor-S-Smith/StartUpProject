@@ -306,4 +306,28 @@ root.render(
   </BrowserRouter>
 );
 ```
-
+# TODO:
+## Account Page
+- Exists
+- Has your pending submissions w/ a status (submitted, approved, changes requested)
+## Story Traversal
+- Users should have a back button to freely traverse the story. I may limit this to only admins one day, but for now there are far too many dead ends. Perhaps one day stories will only be allowed to be added in chunks, unless a person opts in to play in an "unstable realm"
+## Admin Status
+- Only admins should be able to access admin pages
+## The Weave
+- Connections should display by chapter name, rather than _id.
+- Integrate third-party library to display a directed graph, rather than a static table
+## Edit
+- Users should be able to connect to an already existing chapter, but possibly with different choice text.
+- Chapters should not be allowed to have the same name as another chapter.
+- Users should have more text editing options, which should be properly displayed on the story page.
+## Pending
+- Admins should be taken to another window/popup to view the story, instead of it being in the table.
+- Admins should be able to suggest changes or comment on a request. This should then be answerable by the user.
+## Syle
+- Website theme needs a more fanasy feel
+- Story page should be exceptionally well styled as it is what we should be spending the most time on. It should be immersive to the fantasy world.
+## Database
+- Add more code structure. E.g. schemas. See mongoose for an obstraction of what we want, except we don't want to use mongoose. Think about using something like the repo/service structure
+## Backend
+- Make it more secure. You will need to ask a chatbot, but at least configure CORS to only allow your frontend to ask it. Also look into security headers, session security options, app.disable('x-powered-by');, and rate limiting

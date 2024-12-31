@@ -1,9 +1,42 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const { v4: uuIdv4 } = require('uuid');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const DB = require('./database.js');
+const passport = require('passport');
+const { hashPassword } = require('./lib/passwordUtils.js');// Gives access to .env file via process.env.VARIABLE_NAME
+require('./passport.js');
+require('dotenv').config();
 
 const app = express();
+
+// Database store for sessions
+const sessionStore = MongoStore.create({
+  clientPromise: DB.client.connect(),
+  dbName: 'startup',
+  collectionName: 'session'
+});
+
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  store: sessionStore,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 // 1 day
+  }
+}));
+
+// Use our passport.js configurations
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Logging for authentication/session debugging
+app.use((req, res, next) => {
+  //console.log(req.session);
+  //console.log(req.user)
+  next();
+})
 
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
 
@@ -11,11 +44,15 @@ const port = process.argv.length > 2 ? process.argv[2] : 4000;
 app.use(express.json());
 app.use(express.static('public'));
 
+//NOT USING express.urlencoded({extended:true})), review this if errors happen
+
+app.get('/', (req, res, next) => {
+  res.send('<h1>Hello World!</h1>')
+})
+
 // Router
 var apiRouter = express.Router();
 app.use(`/api`, apiRouter);
-
-// Custom Middleware
 
 apiRouter.get('/test', async (req, res) => {
   res.status(200).end();
@@ -88,47 +125,109 @@ apiRouter.get('/joke', async (req, res) => {
 //I am not sure how similar we were allowed to make it, since we were given the code. If is too similar I would be happy to remove it.
 
 apiRouter.post('/auth/signup', async (req, res) => {
-  const user = await DB.getUser(req.body.username);
-  if(user) {
-    res.status(409).send({msg: 'A user already exists with that username'})
-    return;
-  } else if(!req.body.username || !req.body.password) {
-    res.status(409).send({msg: 'Please fill both fields'})
-    return;
-  } else {
-    const newUser = await DB.createUser(req.body.username, req.body.password, req.body.dateJoined);
-    res.send({ token: newUser.token })
-    return;
-  }
-})
 
-apiRouter.post('/auth/login', async (req, res) => {
-  const user = await DB.getUser(req.body.username);
-  if(user) {
-    if(await bcrypt.compare(req.body.password, user.password)) {
-      user.token = uuIdv4();
-      res.send({ token: user.token })
-      return;
+  const { username, password, dateJoined } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ msg: 'Please provide both username and password' });
+  }
+
+  const existingUser = await DB.getUser(username);
+  if (existingUser) {
+    return res.status(409).json({ msg: 'A user already exists with that username' });
+  }
+
+  const {salt, hash} = hashPassword(password);
+  const newUser = await DB.createUser(username, hash, salt, dateJoined);
+
+  req.login(newUser, (err) => {
+    if (err) {
+      return next(err);
     }
-  }
-  
-
-  res.status(401).send({ msg: 'No user exists with that combination of username and password' });
+    res.status(201).json({ 
+      msg: 'User created successfully', 
+      isAuthenticated: true,
+      user: req.user 
+    });
+  });
 })
 
-/* Not currently being used, but may be useful in the future
-apiRouter.delete('/auth/logout', (req, res) => {
-  const user = users[req.body.username];
+// The second function will only be called if authenticate succeeds, but this is not optimal.
+// We don't have control over errors. and Perplexity doesn't like it
+// Alternatively, you can replace the second function with { failureRedirect: '', successRedirect: ''}
 
-  if(user) {
-    delete user.token;
-  }
-
-  res.status(204).end();
+apiRouter.post('/auth/login', passport.authenticate('local'), async (req, res) => {
+    res.status(200).json({
+      isAuthenticated: true,
+      user: req.user
+    });
 });
-*/
+
+
+apiRouter.post('/auth/logout', (req, res, next) => {
+  req.logout((err) => {
+      if (err) { return next(err); }
+      
+      if (req.session) {
+          req.session.destroy((err) => {
+              if (err) {
+                  res.status(400).json({ message: 'Unable to logout' });
+              } else {
+                  res.status(204).end();
+              }
+          });
+      } else {
+          res.status(204).end();
+      }
+  });
+});
+
+// Authentication middleware
+const authMiddleware = (req, res, next) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({
+      isAuthenticated: false,
+      user: null
+    });
+  }
+  next();
+};
+
+// Admin authentication middleware
+const adminAuthMiddleware = (req, res, next) => {
+  if (!req.isAuthenticated() || !req.user.admin) {
+    return res.status(403).json({
+      isAuthenticated: false,
+      user: null
+    });
+  }
+  next();
+};
+
+apiRouter.get('/auth/check', authMiddleware, (req, res) => {
+  res.status(200).json({
+    isAuthenticated: true,
+    user: req.user
+  });
+});
+
+apiRouter.get('/auth/admin', adminAuthMiddleware, (req, res) => {
+  res.status(200).json({
+    isAuthenticated: true,
+    user: req.user
+  });
+});
 
 // Obligatory end middleware
+
+apiRouter.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    error: 'Internal Server Error'
+  });
+});
+
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
+

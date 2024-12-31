@@ -4,9 +4,9 @@ export function Read({title, text, choices, setChapterId, setMode}) {
           
     const choiceButtons = choices ? choices.map((chapterChoice) => {
         return (
-            <div className='row mb-1'>
+            <div id={chapterChoice._id} className='row mb-1'>
                 <div className='col'>
-                    <button id={chapterChoice._id} className="btn btn-secondary" onClick={() => setChapterId(chapterChoice._id)}>{chapterChoice.ChoiceText}</button>
+                    <button className="btn btn-secondary" onClick={() => setChapterId(chapterChoice._id)}>{chapterChoice.ChoiceText}</button>
                 </div>
             </div>
         );

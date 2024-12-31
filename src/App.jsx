@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState, useEffect } from "react";
 import { BrowserRouter, NavLink, Route, Routes, Navigate } from 'react-router-dom';
 import {Login} from './login/login';
 import {Story} from './story/story';
@@ -11,14 +12,44 @@ import './App.css'
 function App() {
   const INITIAL_CHAPTER_ID = '5f9519cd-940b-4462-83f7-225be2856391'
   
-  const [isAuthenticated, setIsAuthenticated] = React.useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    checkAuthStatus();
+    }, []);
+
+  async function checkAuthStatus() {
+    const authResponse = await fetch('/api/auth/check', {
+      method: 'GET',
+      headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+      },
+    });
+    const adminResponse = await fetch('/api/auth/admin', {
+      method: 'GET',
+      headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+      },
+    });
+
+    
+    const authData = await authResponse.json();
+    setIsAuthenticated(authData.isAuthenticated);
+    console.log(`Auth Status: ${authResponse.status}`);
+
+    
+    const adminData = await adminResponse.json();
+    setIsAdmin(adminData.isAuthenticated);
+    console.log(`Admin Status: ${authResponse.status}`);
+  }
 
   return (
     <>
       <BrowserRouter>
         <div className='app'>
           <nav className="navbar navbar-expand-lg navbar-light bg-light p-3">
-            <a className="navbar-brand" href="/">Storyweave</a>
+            <a className="navbar-brand" href="/story">Storyweave</a>
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span className="navbar-toggler-icon"></span>
             </button>
@@ -37,12 +68,12 @@ function App() {
                     <NavLink className="nav-link" to='/weave'>View the Weave</NavLink>
                   </li>
                 )}
-                {isAuthenticated && (
+                {isAuthenticated && isAdmin && (
                   <li className="nav-item">
                     <NavLink className="nav-link" to='/pending'>ADMIN: Pending Submissions</NavLink>
                   </li>
                 )}
-                {isAuthenticated && (
+                {isAuthenticated && isAdmin && (
                   <li className="nav-item">
                     <NavLink className="nav-link" to='/users'>ADMIN: View Users</NavLink>
                   </li>
@@ -55,7 +86,7 @@ function App() {
             <div className="row justify-content-center">
               <div className="col-11">
                 <Routes>
-                  <Route path='/' element={<Login setAuthentication={setIsAuthenticated}/>} exact />
+                  <Route path='/' element={<Login isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated}/>} exact />
                   <Route path='/story' element={<Story initialChapterId={INITIAL_CHAPTER_ID}/>} />
                   <Route path='/weave' element={<Weave/>} />
                   <Route path='/pending' element={<Pending/>} />
