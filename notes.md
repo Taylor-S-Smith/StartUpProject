@@ -330,4 +330,24 @@ root.render(
 ## Database
 - Add more code structure. E.g. schemas. See mongoose for an obstraction of what we want, except we don't want to use mongoose. Think about using something like the repo/service structure
 ## Backend
-- Make it more secure. You will need to ask a chatbot, but at least configure CORS to only allow your frontend to ask it. Also look into security headers, session security options, app.disable('x-powered-by');, and rate limiting
+- Make it more secure. You will need to ask a chatbot, but at least configure CORS to only allow your frontend to ask it. Also look into security headers, session security options, app.disable('x-powered-by');, and rate limiting# HTTP
+
+## Fetch Example
+
+```
+fetch('https://jsonplaceholder.typicode.com/posts', {
+  method: 'POST',
+  body: JSON.stringify({
+    title: 'test title',
+    body: 'test body',
+    userId: 1,
+  }),
+  headers: {
+    'Content-type': 'application/json; charset=UTF-8',
+  },
+})
+  .then((response) => response.json())
+  .then((jsonResponse) => {
+    console.log(jsonResponse);
+  });
+```
